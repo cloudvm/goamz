@@ -8,21 +8,20 @@ import (
 	"testing"
 )
 
-
 func readAuth(filename string) string {
-  buf, err := ioutil.ReadFile(filename)
-  if err != nil {
-    panic(err)
-  }
-  return string(bytes.TrimSpace(buf))
+	buf, err := ioutil.ReadFile(filename)
+	if err != nil {
+		panic(err)
+	}
+	return string(bytes.TrimSpace(buf))
 }
 
 func TestBasic(t *testing.T) {
 
 	dp := New(aws.Auth{
-    AccessKey: readAuth("/opt/cloudvm/keys/tim.key"),
-    SecretKey: readAuth("/opt/cloudvm/keys/tim.secret.key"),
-    }, aws.USWest2)
+		AccessKey: readAuth("/opt/cloudvm/keys/tim.key"),
+		SecretKey: readAuth("/opt/cloudvm/keys/tim.secret.key"),
+	}, aws.USWest2)
 
 	req := &PipelineReq{
 		PipelineIds: []string{

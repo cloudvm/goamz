@@ -12,7 +12,6 @@ import (
 	"log"
 	"time"
 	//  "github.com/bitly/go-simplejson"
-	"errors"
 )
 
 type DP struct {
@@ -33,38 +32,38 @@ type PipelineReq struct {
 }
 
 type Field struct {
-  Key         string
-  RefValue    string
-  StringValue string
+	Key         string
+	RefValue    string
+	StringValue string
 }
 
 type CreatePipelineReq struct {
-  Description string
-  Name string
-  UniqueId string
+	Description string
+	Name        string
+	UniqueId    string
 }
 
 type CreatePipelineResp struct {
-  PipelineId string `json:"pipelineId"`
+	PipelineId string `json:"pipelineId"`
 }
 
 type DescribeObjectsReq struct {
-  EvaluateExpressions bool
-  Marker string
-  ObjectiIds []string
-  PipelineId []string
+	EvaluateExpressions bool
+	Marker              string
+	ObjectiIds          []string
+	PipelineId          []string
 }
 
 type PipelineObject struct {
-  Fields []Field
-  Id string `json:"Id,omitempty"`
-  Name string `json:"Name,omitempty"`
+	Fields []Field
+	Id     string `json:"Id,omitempty"`
+	Name   string `json:"Name,omitempty"`
 }
 
 type DescribeObjectsResp struct {
-  HasMoreResults bool
-  Marker string
-  PipelineObjects []PipelineObject
+	HasMoreResults  bool
+	Marker          string
+	PipelineObjects []PipelineObject
 }
 
 type DescribePipelinesResp struct {
@@ -79,136 +78,136 @@ type PipelineDescription struct {
 }
 
 type ExpressionReq struct {
-  Expression string
-  ObjectId string
-  PipelineId string
+	Expression string
+	ObjectId   string
+	PipelineId string
 }
 
 type ExpressionResp struct {
-  EvaluatedExpression string
+	EvaluatedExpression string
 }
 
 type GetPipelineDefinitionReq struct {
-  PipelineId string
-  Version string
+	PipelineId string `json:"pipelineId"`
+	Version    string `json:"Version,omitempty"`
 }
 
 type GetPipelineDefinitionResp struct {
-  PipelineObjects []PipelineObject
+	PipelineObjects []PipelineObject
 }
 
 type ListPipelinesReq struct {
-  Marker string
+	Marker string
 }
 
 type PipelineIds struct {
-  Id string
-  Name string
+	Id   string
+	Name string
 }
 
 type ListPipelinesResp struct {
-  HasMoreResults bool
-  Marker string
-  PipelineIdList []PipelineIds
+	HasMoreResults bool
+	Marker         string
+	PipelineIdList []PipelineIds
 }
 
 type PipelineDefinitionReq struct {
-  PipelineId string
-  PipelineObjects []PipelineObject
+	PipelineId      string
+	PipelineObjects []PipelineObject
 }
 
 type ValidationError struct {
-  Errors []string
-  Id string
+	Errors []string
+	Id     string
 }
 
 type ValidationWarning struct {
-  Id string
-  Warnings []string
+	Id       string
+	Warnings []string
 }
 
 type PipelineDefinitionResp struct {
-  Errored bool
-  ValidationErrors []ValidationError
-  ValidationWarnings []ValidationWarning
+	Errored            bool
+	ValidationErrors   []ValidationError
+	ValidationWarnings []ValidationWarning
 }
 
 type PollForTaskReq struct {
-  Hostname string
-  InstanceIdentity struct {
-    Document string
-    Signature string
-  }
-  WorkerGroup string
+	Hostname         string
+	InstanceIdentity struct {
+		Document  string
+		Signature string
+	}
+	WorkerGroup string
 }
 
 type Object struct {
-  String PipelineObject `json:"string"`
+	String PipelineObject `json:"string"`
 }
 
 type PollForTaskResp struct {
-  TaskObject struct {
-    AttemptId string
-    Objects []Object
-    PipelineId string
-    TaskId string
-  }
+	TaskObject struct {
+		AttemptId  string
+		Objects    []Object
+		PipelineId string
+		TaskId     string
+	}
 }
 
 type Selector struct {
-  FieldName string
-  Operator struct {
-    Type string
-    Values []string
-  }
+	FieldName string
+	Operator  struct {
+		Type   string
+		Values []string
+	}
 }
 
 type QueryObjectsReq struct {
-  Limit int
-  Marker string
-  PipelineId string
-  Query struct {
-    Selectors []Selector
-  }
-  Sphere string
+	Limit      int
+	Marker     string
+	PipelineId string
+	Query      struct {
+		Selectors []Selector
+	}
+	Sphere string
 }
 
 type QueryObjectsResp struct {
-  HasMoreResults bool
-  Ids []string
-  Marker string
+	HasMoreResults bool
+	Ids            []string
+	Marker         string
 }
 
 type ReportTaskProgressReq struct {
-  TaskId string
+	TaskId string
 }
 
 type ReportTaskProgressResp struct {
-  Canceled bool
+	Canceled bool
 }
 
 type ReportTaskRunnerHeartbeatReq struct {
-  Hostname string
-  TaskrunnerId string
-  WorkerGroup string
+	Hostname     string
+	TaskrunnerId string
+	WorkerGroup  string
 }
 
 type ReportTaskRunnerHeartbeatResp struct {
-  Terminate bool
+	Terminate bool
 }
 
 type SetStatusReq struct {
-  ObjectIds []string
-  PipelineId string
-  Status string
+	ObjectIds  []string
+	PipelineId string
+	Status     string
 }
 
 type SetTaskStatusReq struct {
-  ErrorId string
-  ErrorMessage string
-  ErrorStackTrace string
-  TaskId string
-  TaskStatus string
+	ErrorId         string
+	ErrorMessage    string
+	ErrorStackTrace string
+	TaskId          string
+	TaskStatus      string
 }
 
 func (dp *DP) queryServer(action string, postData []byte) (int, []byte, error) {
@@ -243,65 +242,62 @@ func (dp *DP) queryServer(action string, postData []byte) (int, []byte, error) {
 }
 
 func (dp *DP) ActivatePipeline(req *PipelineReq) error {
-  buf, err := json.Marshal(req)
-  if err != nil {
-    return err
-  }
-  _, _, err = dp.queryServer("ActivitatePipelines", buf)
-  if err != nil {
-    return err
-  }
-  return nil
+	buf, err := json.Marshal(req)
+	if err != nil {
+		return err
+	}
+	_, _, err = dp.queryServer("ActivitatePipelines", buf)
+	if err != nil {
+		return err
+	}
+	return nil
 }
-
 
 func (dp *DP) CreatePipeline(req *CreatePipelineReq) (*CreatePipelineResp, error) {
-  buf, err := json.Marshal(req)
-  if err != nil {
-    return nil, err
-  }
-  _, body, err := dp.queryServer("CreatePipeline", buf)
-  if err != nil {
-    return nil, err
-  }
-  var jsonResp CreatePipelineResp
-  err = json.Unmarshal(body, &jsonResp)
-  if err != nil {
-    return nil, errors.New("cannot encode json response: " + string(body))
-  }
-  return &jsonResp, nil
+	buf, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+	_, body, err := dp.queryServer("CreatePipeline", buf)
+	if err != nil {
+		return nil, err
+	}
+	var jsonResp CreatePipelineResp
+	err = json.Unmarshal(body, &jsonResp)
+	if err != nil {
+		return nil, err
+	}
+	return &jsonResp, nil
 }
 
-
 func (dp *DP) DeletePipeline(req *PipelineReq) error {
-  buf, err := json.Marshal(req)
-  if err != nil {
-    return err
-  }
-  _, _, err = dp.queryServer("DeletePipelines", buf)
-  if err != nil {
-    return err
-  }
-  return nil
+	buf, err := json.Marshal(req)
+	if err != nil {
+		return err
+	}
+	_, _, err = dp.queryServer("DeletePipelines", buf)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (dp *DP) DescribeObjects(req *DescribeObjectsReq) (*DescribeObjectsResp, error) {
-  buf, err := json.Marshal(req)
-  if err != nil {
-    return nil, err
-  }
-  _, body, err := dp.queryServer("DescribeObjects", buf)
-  if err != nil {
-    return nil, err
-  }
-  var jsonResp DescribeObjectsResp
-  err = json.Unmarshal(body, &jsonResp)
-  if err != nil {
-    return nil, errors.New("cannot encode json response: " + string(body))
-  }
-  return &jsonResp, nil
+	buf, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+	_, body, err := dp.queryServer("DescribeObjects", buf)
+	if err != nil {
+		return nil, err
+	}
+	var jsonResp DescribeObjectsResp
+	err = json.Unmarshal(body, &jsonResp)
+	if err != nil {
+		return nil, err
+	}
+	return &jsonResp, nil
 }
-
 
 func (dp *DP) DescribePipelines(req *PipelineReq) (*DescribePipelinesResp, error) {
 	buf, err := json.Marshal(req)
@@ -315,185 +311,184 @@ func (dp *DP) DescribePipelines(req *PipelineReq) (*DescribePipelinesResp, error
 	var jsonResp DescribePipelinesResp
 	err = json.Unmarshal(body, &jsonResp)
 	if err != nil {
-		return nil, errors.New("cannot encode json response: " + string(body))
+		return nil, err
 	}
 	return &jsonResp, nil
 }
 
-
 func (dp *DP) EvaluateExpression(req *ExpressionReq) (*ExpressionResp, error) {
-  buf, err := json.Marshal(req)
-  if err != nil {
-    return nil, err
-  }
-  _, body, err := dp.queryServer("EvaluateExpression", buf)
-  if err != nil {
-    return nil, err
-  }
-  var jsonResp ExpressionResp
-  err = json.Unmarshal(body, &jsonResp)
-  if err != nil {
-    return nil, errors.New("cannot encode json response: " + string(body))
-  }
-  return &jsonResp, nil
+	buf, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+	_, body, err := dp.queryServer("EvaluateExpression", buf)
+	if err != nil {
+		return nil, err
+	}
+	var jsonResp ExpressionResp
+	err = json.Unmarshal(body, &jsonResp)
+	if err != nil {
+		return nil, err
+	}
+	return &jsonResp, nil
 }
 
 func (dp *DP) GetPipelineDefinition(req *GetPipelineDefinitionReq) (*GetPipelineDefinitionResp, error) {
-  buf, err := json.Marshal(req)
-  if err != nil {
-    return nil, err
-  }
-  _, body, err := dp.queryServer("GetPipelineDefinition", buf)
-  if err != nil {
-    return nil, err
-  }
-  var jsonResp GetPipelineDefinitionResp
-  err = json.Unmarshal(body, &jsonResp)
-  if err != nil {
-    return nil, errors.New("cannot encode json response: " + string(body))
-  }
-  return &jsonResp, nil
+	buf, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+	_, body, err := dp.queryServer("GetPipelineDefinition", buf)
+	if err != nil {
+		return nil, err
+	}
+	var jsonResp GetPipelineDefinitionResp
+	err = json.Unmarshal(body, &jsonResp)
+	if err != nil {
+		return nil, err
+	}
+	return &jsonResp, nil
 }
 
 func (dp *DP) ListPipelines(req *ListPipelinesReq) (*ListPipelinesResp, error) {
-  buf, err := json.Marshal(req)
-  if err != nil {
-    return nil, err
-  }
-  _, body, err := dp.queryServer("ListPipelines", buf)
-  if err != nil {
-    return nil, err
-  }
-  var jsonResp ListPipelinesResp
-  err = json.Unmarshal(body, &jsonResp)
-  if err != nil {
-    return nil, errors.New("cannot encode json response: " + string(body))
-  }
-  return &jsonResp, nil
+	buf, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+	_, body, err := dp.queryServer("ListPipelines", buf)
+	if err != nil {
+		return nil, err
+	}
+	var jsonResp ListPipelinesResp
+	err = json.Unmarshal(body, &jsonResp)
+	if err != nil {
+		return nil, err
+	}
+	return &jsonResp, nil
 }
 
 func (dp *DP) PollForTask(req *PollForTaskReq) (*PollForTaskResp, error) {
-  buf, err := json.Marshal(req)
-  if err != nil {
-    return nil, err
-  }
-  _, body, err := dp.queryServer("PollForTask", buf)
-  if err != nil {
-    return nil, err
-  }
-  var jsonResp PollForTaskResp
-  err = json.Unmarshal(body, &jsonResp)
-  if err != nil {
-    return nil, errors.New("cannot encode json response: " + string(body))
-  }
-  return &jsonResp, nil
+	buf, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+	_, body, err := dp.queryServer("PollForTask", buf)
+	if err != nil {
+		return nil, err
+	}
+	var jsonResp PollForTaskResp
+	err = json.Unmarshal(body, &jsonResp)
+	if err != nil {
+		return nil, err
+	}
+	return &jsonResp, nil
 }
 
 func (dp *DP) PutPipelineDefinition(req *PipelineDefinitionReq) (*PipelineDefinitionResp, error) {
-  buf, err := json.Marshal(req)
-  if err != nil {
-    return nil, err
-  }
-  _, body, err := dp.queryServer("PutPipelineDefinition", buf)
-  if err != nil {
-    return nil, err
-  }
-  var jsonResp PipelineDefinitionResp
-  err = json.Unmarshal(body, &jsonResp)
-  if err != nil {
-    return nil, errors.New("cannot encode json response: " + string(body))
-  }
-  return &jsonResp, nil
+	buf, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+	_, body, err := dp.queryServer("PutPipelineDefinition", buf)
+	if err != nil {
+		return nil, err
+	}
+	var jsonResp PipelineDefinitionResp
+	err = json.Unmarshal(body, &jsonResp)
+	if err != nil {
+		return nil, err
+	}
+	return &jsonResp, nil
 }
 
 func (dp *DP) QueryObjects(req *QueryObjectsReq) (*QueryObjectsResp, error) {
-  buf, err := json.Marshal(req)
-  if err != nil {
-    return nil, err
-  }
-  _, body, err := dp.queryServer("QueryObjects", buf)
-  if err != nil {
-    return nil, err
-  }
-  var jsonResp QueryObjectsResp
-  err = json.Unmarshal(body, &jsonResp)
-  if err != nil {
-    return nil, errors.New("cannot encode json response: " + string(body))
-  }
-  return &jsonResp, nil
+	buf, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+	_, body, err := dp.queryServer("QueryObjects", buf)
+	if err != nil {
+		return nil, err
+	}
+	var jsonResp QueryObjectsResp
+	err = json.Unmarshal(body, &jsonResp)
+	if err != nil {
+		return nil, err
+	}
+	return &jsonResp, nil
 }
 
 func (dp *DP) ReportTaskProgress(req *ReportTaskProgressReq) (*ReportTaskProgressResp, error) {
-  buf, err := json.Marshal(req)
-  if err != nil {
-    return nil, err
-  }
-  _, body, err := dp.queryServer("ReportTaskProgress", buf)
-  if err != nil {
-    return nil, err
-  }
-  var jsonResp ReportTaskProgressResp
-  err = json.Unmarshal(body, &jsonResp)
-  if err != nil {
-    return nil, errors.New("cannot encode json response: " + string(body))
-  }
-  return &jsonResp, nil
+	buf, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+	_, body, err := dp.queryServer("ReportTaskProgress", buf)
+	if err != nil {
+		return nil, err
+	}
+	var jsonResp ReportTaskProgressResp
+	err = json.Unmarshal(body, &jsonResp)
+	if err != nil {
+		return nil, err
+	}
+	return &jsonResp, nil
 }
 
 func (dp *DP) ReportTaskRunnerHeartbeat(req *ReportTaskRunnerHeartbeatReq) (*ReportTaskRunnerHeartbeatResp, error) {
-  buf, err := json.Marshal(req)
-  if err != nil {
-    return nil, err
-  }
-  _, body, err := dp.queryServer("ReportTaskRunnerHeartbeat", buf)
-  if err != nil {
-    return nil, err
-  }
-  var jsonResp ReportTaskRunnerHeartbeatResp
-  err = json.Unmarshal(body, &jsonResp)
-  if err != nil {
-    return nil, errors.New("cannot encode json response: " + string(body))
-  }
-  return &jsonResp, nil
+	buf, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+	_, body, err := dp.queryServer("ReportTaskRunnerHeartbeat", buf)
+	if err != nil {
+		return nil, err
+	}
+	var jsonResp ReportTaskRunnerHeartbeatResp
+	err = json.Unmarshal(body, &jsonResp)
+	if err != nil {
+		return nil, err
+	}
+	return &jsonResp, nil
 }
 
 func (dp *DP) SetStatus(req *SetStatusReq) error {
-  buf, err := json.Marshal(req)
-  if err != nil {
-    return err
-  }
-  _, _, err = dp.queryServer("SetStatus", buf)
-  if err != nil {
-    return err
-  }
-  return nil
+	buf, err := json.Marshal(req)
+	if err != nil {
+		return err
+	}
+	_, _, err = dp.queryServer("SetStatus", buf)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (dp *DP) SetTaskStatus(req *SetTaskStatusReq) error {
-  buf, err := json.Marshal(req)
-  if err != nil {
-    return err
-  }
-  _, _, err = dp.queryServer("SetTaskStatus", buf)
-  if err != nil {
-    return err
-  }
-  return nil
+	buf, err := json.Marshal(req)
+	if err != nil {
+		return err
+	}
+	_, _, err = dp.queryServer("SetTaskStatus", buf)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (dp *DP) ValidatePipelineDefinition(req *PipelineDefinitionReq) (*PipelineDefinitionResp, error) {
-  buf, err := json.Marshal(req)
-  if err != nil {
-    return nil, err
-  }
-  _, body, err := dp.queryServer("ValidatePipelineDefinition", buf)
-  if err != nil {
-    return nil, err
-  }
-  var jsonResp PipelineDefinitionResp
-  err = json.Unmarshal(body, &jsonResp)
-  if err != nil {
-    return nil, errors.New("cannot encode json response: " + string(body))
-  }
-  return &jsonResp, nil
+	buf, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+	_, body, err := dp.queryServer("ValidatePipelineDefinition", buf)
+	if err != nil {
+		return nil, err
+	}
+	var jsonResp PipelineDefinitionResp
+	err = json.Unmarshal(body, &jsonResp)
+	if err != nil {
+		return nil, err
+	}
+	return &jsonResp, nil
 }
