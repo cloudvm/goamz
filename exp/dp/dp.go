@@ -32,32 +32,40 @@ type PipelineReq struct {
 }
 
 type Field struct {
-	Key         string
-	RefValue    string
-	StringValue string
+	Key         string `json:"key"`
+	RefValue    string `json:"refValue,omitempty"`
+	StringValue string `json:"stringValue,omitempty"`
 }
 
 type CreatePipelineReq struct {
-	Description string
-	Name        string
-	UniqueId    string
+	Description string `json:"description,omitempty"`
+	Name        string `json:"name"`
+	UniqueId    string `json:"uniqueId"`
 }
 
 type CreatePipelineResp struct {
 	PipelineId string `json:"pipelineId"`
 }
 
+type DeletePipelineReq struct {
+	PipelineId string `json:"pipelineId"`
+}
+
+type ActivatePipelineReq struct {
+	PipelineId string `json:"pipelineId"`
+}
+
 type DescribeObjectsReq struct {
-	EvaluateExpressions bool
-	Marker              string
-	ObjectiIds          []string
-	PipelineId          []string
+	EvaluateExpressions bool     `json:"evaluateExpressions,omitempty"`
+	Marker              string   `json:"marker,omitempty"`
+	ObjectIds           []string `json:"objectIds"`
+	PipelineId          string   `json:"pipelineId"`
 }
 
 type PipelineObject struct {
-	Fields []Field
-	Id     string `json:"Id,omitempty"`
-	Name   string `json:"Name,omitempty"`
+	Fields []Field `json:"fields"`
+	Id     string  `json:"id,omitempty"`
+	Name   string  `json:"name,omitempty"`
 }
 
 type DescribeObjectsResp struct {
@@ -78,9 +86,9 @@ type PipelineDescription struct {
 }
 
 type ExpressionReq struct {
-	Expression string
-	ObjectId   string
-	PipelineId string
+	Expression string `json:"expression"`
+	ObjectId   string `json:"objectId"`
+	PipelineId string `json:"pipelineId"`
 }
 
 type ExpressionResp struct {
@@ -89,7 +97,7 @@ type ExpressionResp struct {
 
 type GetPipelineDefinitionReq struct {
 	PipelineId string `json:"pipelineId"`
-	Version    string `json:"Version,omitempty"`
+	Version    string `json:"version,omitempty"`
 }
 
 type GetPipelineDefinitionResp struct {
@@ -97,7 +105,7 @@ type GetPipelineDefinitionResp struct {
 }
 
 type ListPipelinesReq struct {
-	Marker string
+	Marker string `json:"marker,omitempty"`
 }
 
 type PipelineIds struct {
@@ -112,8 +120,8 @@ type ListPipelinesResp struct {
 }
 
 type PipelineDefinitionReq struct {
-	PipelineId      string
-	PipelineObjects []PipelineObject
+	PipelineId      string           `json:"pipelineId"`
+	PipelineObjects []PipelineObject `json:"pipelineObjects"`
 }
 
 type ValidationError struct {
@@ -133,12 +141,12 @@ type PipelineDefinitionResp struct {
 }
 
 type PollForTaskReq struct {
-	Hostname         string
+	Hostname         string `json:"hostname,omitempty"`
 	InstanceIdentity struct {
-		Document  string
-		Signature string
-	}
-	WorkerGroup string
+		Document  string `json:"document,omitempty"`
+		Signature string `json:"signature,omitempty"`
+	} `json:"instanceIdentity,omitempty"`
+	WorkerGroup string `json:"workerGroup"`
 }
 
 type Object struct {
@@ -163,13 +171,13 @@ type Selector struct {
 }
 
 type QueryObjectsReq struct {
-	Limit      int
-	Marker     string
-	PipelineId string
+	Limit      int    `json:"limit,omitempty"`
+	Marker     string `json:"marker,omitempty"`
+	PipelineId string `json:"pipelineId"`
 	Query      struct {
-		Selectors []Selector
-	}
-	Sphere string
+		Selectors []Selector `json:"selectors,omitempty"`
+	} `json:"query,omitempty"`
+	Sphere string `json:"sphere"`
 }
 
 type QueryObjectsResp struct {
@@ -179,7 +187,7 @@ type QueryObjectsResp struct {
 }
 
 type ReportTaskProgressReq struct {
-	TaskId string
+	TaskId string `json:"taskId"`
 }
 
 type ReportTaskProgressResp struct {
@@ -187,9 +195,9 @@ type ReportTaskProgressResp struct {
 }
 
 type ReportTaskRunnerHeartbeatReq struct {
-	Hostname     string
-	TaskrunnerId string
-	WorkerGroup  string
+	Hostname     string `json:"hostname,omitempty"`
+	TaskrunnerId string `json:"taskrunnerId"`
+	WorkerGroup  string `json:"workerGroup,omitempty"`
 }
 
 type ReportTaskRunnerHeartbeatResp struct {
@@ -197,17 +205,17 @@ type ReportTaskRunnerHeartbeatResp struct {
 }
 
 type SetStatusReq struct {
-	ObjectIds  []string
-	PipelineId string
-	Status     string
+	ObjectIds  []string `json:"objectIds"`
+	PipelineId string   `json:"pipelineId"`
+	Status     string   `json:"status"`
 }
 
 type SetTaskStatusReq struct {
-	ErrorId         string
-	ErrorMessage    string
-	ErrorStackTrace string
-	TaskId          string
-	TaskStatus      string
+	ErrorId         string `json:"errorId,omitempty"`
+	ErrorMessage    string `json:"errorMessage,omitempty"`
+	ErrorStackTrace string `json:"erroStackTrace,omitempty"`
+	TaskId          string `json:"taskId"`
+	TaskStatus      string `json:"taskStatus"`
 }
 
 func (dp *DP) queryServer(action string, postData []byte) (int, []byte, error) {
@@ -241,12 +249,12 @@ func (dp *DP) queryServer(action string, postData []byte) (int, []byte, error) {
 	return resp.StatusCode, respBuf, err
 }
 
-func (dp *DP) ActivatePipeline(req *PipelineReq) error {
+func (dp *DP) ActivatePipeline(req *ActivatePipelineReq) error {
 	buf, err := json.Marshal(req)
 	if err != nil {
 		return err
 	}
-	_, _, err = dp.queryServer("ActivitatePipelines", buf)
+	_, _, err = dp.queryServer("ActivatePipeline", buf)
 	if err != nil {
 		return err
 	}
@@ -270,12 +278,12 @@ func (dp *DP) CreatePipeline(req *CreatePipelineReq) (*CreatePipelineResp, error
 	return &jsonResp, nil
 }
 
-func (dp *DP) DeletePipeline(req *PipelineReq) error {
+func (dp *DP) DeletePipeline(req *DeletePipelineReq) error {
 	buf, err := json.Marshal(req)
 	if err != nil {
 		return err
 	}
-	_, _, err = dp.queryServer("DeletePipelines", buf)
+	_, _, err = dp.queryServer("DeletePipeline", buf)
 	if err != nil {
 		return err
 	}
